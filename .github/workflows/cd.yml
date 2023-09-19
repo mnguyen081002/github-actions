@@ -22,13 +22,20 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Bump version and push tag
+        id: tag
+        uses: anothrNick/github-tag-action@1.64.0 # Don't use @master or @v1 unless you're happy to test the latest version
+        env:
+          #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # if you don't want to set write permissions use a PAT token
+          WITH_V: true
+          PRERELEASE: true
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
           context: .
           platforms: linux/amd64
           push: true
-          tags: ${{vars.REPOSITORY}}:${{ env.GITHUB_COMMIT_ID }}
+          tags: ${{vars.REPOSITORY}}:${{ steps.tag.outputs.new_tag }}
       - name: Deploy using ssh
         uses: appleboy/ssh-action@master
         with:
@@ -47,5 +54,5 @@ jobs:
                 cd "${{ secrets.DIRECTORY }}";
             fi
             echo "Installing dependencies";
-            docker pull ${{vars.REPOSITORY}}:${{ env.GITHUB_COMMIT_ID }};
-            docker run -d -p ${{secrets.EXPORT_PORT}}:${{secrets.CONTAINER_PORT}} --env-file .env ${{vars.REPOSITORY}}:${{ env.GITHUB_COMMIT_ID }};
+            docker pull ${{vars.REPOSITORY}}:${{ steps.tag.outputs.new_tag }};
+            docker run -d -p ${{secrets.EXPORT_PORT}}:${{secrets.CONTAINER_PORT}} --env-file .env ${{vars.REPOSITORY}}:${{ steps.tag.outputs.new_tag }};
