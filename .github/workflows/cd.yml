@@ -18,10 +18,10 @@ jobs:
           port: 22
           script: |
             if [ -d "${{ secrets.DIRECTORY }}" ]; then
-                echo "Directory exists, pulling from repo"
-                cd ${{ secrets.DIRECTORY }}
-                git pull origin develop
+                echo "Directory exists, pulling from repo";
+                cd ${{ secrets.DIRECTORY }};
+                git pull origin develop;
             else
-                echo "Directory does not exist, cloning repo"
-                git clone https://github.com/${{ github.repository }} ${{ secrets.DIRECTORY }}
-                cd ${{ secrets.DIRECTORY }}
+                echo "Directory does not exist, cloning repo";
+                git clone https://github.com/${{ github.repository }} ${{ secrets.DIRECTORY }};
+                cd ${{ secrets.DIRECTORY }};
