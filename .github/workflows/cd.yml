@@ -19,9 +19,10 @@ jobs:
           script: |
             if [ -d "${{ secrets.DIRECTORY }}" ]; then
                 echo "Directory exists, pulling from repo";
-                cd ${{ secrets.DIRECTORY }};
+                cd "${{ secrets.DIRECTORY }}";
                 git pull origin develop;
             else
                 echo "Directory does not exist, cloning repo";
-                git clone https://github.com/${{ github.repository }} ${{ secrets.DIRECTORY }};
-                cd ${{ secrets.DIRECTORY }};
+                git clone "https://github.com/${{ github.repository }}" "${{ secrets.DIRECTORY }}";
+                cd "${{ secrets.DIRECTORY }}";
+            fi
