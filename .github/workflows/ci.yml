@@ -6,9 +6,9 @@ on:
 
 env:
   GITHUB_PR_NUMBER: ${{github.event.pull_request.number}}
+
 jobs:
-  docker:
-    environment: development
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -23,14 +23,25 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build and export to Docker
+        id: build
         uses: docker/build-push-action@v5
         with:
           context: .
           load: true
-          tags: ${{ vars.TEST_TAG }}
+          tags: ${{ env.TEST_TAG }}
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
       - name: Test
         run: |
-          docker run --rm ${{ vars.TEST_TAG }}
+          docker run --rm ${{ env.TEST_TAG }}
+
+  push:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
