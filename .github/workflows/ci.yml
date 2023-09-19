@@ -28,7 +28,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          tags: ${{ vars.TEST_TAG }}
+          tags: ${{vars.REPOSITORY}}:${{ env.GITHUB_PR_NUMBER }}
           outputs: type=docker,dest=/tmp/image.tar
       - name: Upload artifact
         uses: actions/upload-artifact@v3
@@ -56,10 +56,19 @@ jobs:
     needs: [build, test]
     runs-on: ubuntu-latest
     steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: image
+          path: /tmp
+      - name: Test
+        run: |
+          docker load --input /tmp/image.tar
+          docker image ls -a
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
           context: .
           platforms: linux/amd64
           push: true
-          tags: titusnguyen/erp:${{ env.GITHUB_PR_NUMBER }}
+          tags: ${{vars.REPOSITORY}}:${{ env.GITHUB_PR_NUMBER }}
