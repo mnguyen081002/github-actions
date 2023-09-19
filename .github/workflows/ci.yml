@@ -28,7 +28,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          tags: ${{vars.REPOSITORY}}:${{ env.GITHUB_PR_NUMBER }}
+          tags: ${{ vars.REPOSITORY }}:${{ env.GITHUB_PR_NUMBER }}
           outputs: type=docker,dest=/tmp/image.tar
       - name: Upload artifact
         uses: actions/upload-artifact@v3
