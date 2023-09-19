@@ -5,7 +5,7 @@ on:
     branches:
       - develop
 env:
-  GITHUB_COMMIT_ID: ${{github.event.commit_comment.id}}
+  GITHUB_COMMIT_ID: ${{github.event.commit_comment.comment.id}}
 jobs:
   build:
     environment: development
