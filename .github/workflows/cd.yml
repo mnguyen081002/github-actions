@@ -5,7 +5,7 @@ on:
     branches:
       - develop
 env:
-  GITHUB_PR_NUMBER: ${{github.event.commit_comment.id}}
+  GITHUB_COMMIT_ID: ${{github.event.commit_comment.id}}
 jobs:
   build:
     environment: development
@@ -22,13 +22,13 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Build and export to Docker
-        id: build
+      - name: Build and push
         uses: docker/build-push-action@v5
         with:
           context: .
-          tags: ${{ vars.REPOSITORY }}:${{ env.GITHUB_PR_NUMBER }}
-          outputs: type=docker,dest=/tmp/image.tar
+          platforms: linux/amd64
+          push: true
+          tags: ${{vars.REPOSITORY}}:${{ env.GITHUB_COMMIT_ID }}
       - name: Deploy using ssh
         uses: appleboy/ssh-action@master
         with:
