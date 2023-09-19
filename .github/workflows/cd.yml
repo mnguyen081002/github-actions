@@ -26,8 +26,6 @@ jobs:
                 git clone "https://github.com/${{ github.repository }}" "${{ secrets.DIRECTORY }}";
                 cd "${{ secrets.DIRECTORY }}";
             fi
-
             echo "Installing dependencies";
-
             docker pull ${{vars.REPOSITORY}}:${{ env.GITHUB_PR_NUMBER }};
-            docker run -p ${{secrets.EXPORT_PORT}}:${{secrets.CONTAINER_PORT}} --env-file .env ${{vars.REPOSITORY}}:${{ env.GITHUB_PR_NUMBER }} -d;
+            docker run -d -p ${{secrets.EXPORT_PORT}}:${{secrets.CONTAINER_PORT}} --env-file .env ${{vars.REPOSITORY}}:${{ env.GITHUB_PR_NUMBER }};
