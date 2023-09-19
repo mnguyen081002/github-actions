@@ -48,4 +48,4 @@ jobs:
             fi
             echo "Installing dependencies";
             docker pull ${{vars.REPOSITORY}}:${{ env.GITHUB_COMMIT_ID }};
-            docker run -d -p ${{secrets.EXPORT_PORT}}:${{secrets.CONTAINER_PORT}} --env-file .env ${{vars.REPOSITORY}};
+            docker run -d -p ${{secrets.EXPORT_PORT}}:${{secrets.CONTAINER_PORT}} --env-file .env ${{vars.REPOSITORY}}:${{ env.GITHUB_COMMIT_ID }};
