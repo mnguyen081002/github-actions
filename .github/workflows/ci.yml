@@ -39,7 +39,7 @@ jobs:
           docker run --rm ${{ env.TEST_TAG }}
 
   push:
-    needs: build
+    needs: [build, test]
     runs-on: ubuntu-latest
     steps:
       - name: Build and push
