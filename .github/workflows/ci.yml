@@ -28,17 +28,28 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          load: true
           tags: ${{ vars.TEST_TAG }}
+          outputs: type=docker,dest=/tmp/image.tar
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: image
+          path: /tmp/image.tar
 
   test:
     environment: development
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: image
+          path: /tmp
       - name: Test
         run: |
-          docker run --rm ${{ vars.TEST_TAG }}
+          docker load --input /tmp/myimage.tar
+          docker image ls -a
 
   push:
     environment: development
